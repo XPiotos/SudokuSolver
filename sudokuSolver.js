@@ -81,7 +81,7 @@ const filterSquaresSimple = () => {
 	}
 }
 
-const filterComplex = () => {
+const filterRowsComplex = () => {
 	for (let i = 0; i < 9; i++) {
 		for (let j = 0; j < 9; j++) {
 			if (Array.isArray(sudoku[i][j])) {
@@ -95,6 +95,20 @@ const filterComplex = () => {
 					}
 				}
 				
+				if (uniqueValues.length === 1) {
+					sudoku[i][j] = uniqueValues[0];
+				}
+			}
+		}
+	}
+}
+
+const filterColumnsComplex = () => {
+	for (let i = 0; i < 9; i++) {
+		for (let j = 0; j < 9; j++) {
+			if (Array.isArray(sudoku[i][j])) {
+				let uniqueValues = [...sudoku[i][j]];
+				
 				for (let k = 0; k < 9; k++) {
 					if (k !== i && Array.isArray(sudoku[k][j])) {
 						uniqueValues = uniqueValues.filter(value => !sudoku[k][j].includes(value));
@@ -103,6 +117,20 @@ const filterComplex = () => {
 						}
 					}
 				}
+				
+				if (uniqueValues.length === 1) {
+					sudoku[i][j] = uniqueValues[0];
+				}
+			}
+		}
+	}
+}
+
+const filterSquaresComplex = () => {
+	for (let i = 0; i < 9; i++) {
+		for (let j = 0; j < 9; j++) {
+			if (Array.isArray(sudoku[i][j])) {
+				let uniqueValues = [...sudoku[i][j]];
 				
 				const imod = i % 3;
 				const jmod = j % 3;
@@ -126,14 +154,15 @@ const filterComplex = () => {
 	}
 }
 
-
 const sudokuSolver = () => {
 	const numberOfSteps = 9**4;
 	for (let x = 0; x < numberOfSteps; x++) {
-			filterRowsSimple();
-			filterColumnsSimple();
-			filterSquaresSimple();
-			filterComplex();
+		filterRowsSimple();
+		filterColumnsSimple();
+		filterSquaresSimple();
+		filterRowsComplex();
+		filterColumnsComplex();
+		filterSquaresComplex();
 	}
 }
 

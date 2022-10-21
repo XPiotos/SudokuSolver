@@ -1,15 +1,27 @@
 'use strict';
 
+const sudokuCopy = [
+	[null, null, null, null, null, null, null, null, null],
+	[null, null, null, null, null, null, null, null, null],
+	[null, null, null, null, null, null, null, null, null],
+	[null, null, null, null, null, null, null, null, null],
+	[null, null, null, null, null, null, null, null, null],
+	[null, null, null, null, null, null, null, null, null],
+	[null, null, null, null, null, null, null, null, null],
+	[null, null, null, null, null, null, null, null, null],
+	[null, null, null, null, null, null, null, null, null]
+];
+
 const sudoku = [
-	[null, null, null, 6, null, null, null, 2, null],
-	[5, null, 6, 4, 7, null, null, null, null],
-	[8, 3, null, null, 9, null, 7, null, null],
-	[null, null, null, 8, null, 5, null, 4, null],
-	[6, null, 9, 1, null, 3, 2, 8, 7],
-	[1, 8, 4, 7, null, 9, 5, null, 6],
-	[null, null, null, 9, null, null, 6, null, 3],
-	[4, 6, null, null, null, null, null, 9, 2],
-	[null, null, 3, null, 8, null, null, null, null]
+	[null, null, 2, null, null, 4, null, 7, null],
+	[null, null, 4, null, null, 1, null, null, 3],
+	[7, 5, null, null, null, null, null, null, null],
+	[null, null, null, null, 8, null, null, 5, 2],
+	[null, null, null, 1, null, 3, null, null, null],
+	[6, 2, null, null, 4, null, null, null, null],
+	[null, null, null, null, null, null, null, 3, 5],
+	[1, null, null, 7, null, null, 9, null, null],
+	[null, 8, null, 3, null, null, 4, null, null]
 ];
 
 for (let i = 0; i < 9; i++) {
@@ -81,6 +93,35 @@ const filterSquaresSimple = () => {
 	}
 }
 
+const removeNumberFromColumnsRowsAndSquare = (numberToRemove, currentRow, currentColumn) => {
+	for (let i = 0; i < 9; i++) {
+		let rowIndex;
+		if (Array.isArray(sudoku[currentRow][i]) && (rowIndex = sudoku[currentRow][i].indexOf(numberToRemove)) !== -1) {
+			sudoku[currentRow][i].splice(rowIndex, 1);
+		}
+	}
+	
+	for (let i = 0; i < 9; i++) {
+		let columnIndex;
+		if (Array.isArray(sudoku[i][currentColumn]) && (columnIndex = sudoku[i][currentColumn].indexOf(numberToRemove)) !== -1) {
+			sudoku[i][currentColumn].splice(columnIndex, 1);
+		}
+	}
+	
+	const currentRowMod = currentRow % 3;
+	const currentColumnMod = currentColumn % 3;
+	for (let k = -currentRowMod; k <= 2 - currentRowMod; k++) {
+		for (let l = -currentColumnMod; l <= 2 - currentColumnMod; l++) {
+			let squareIndex;
+			if ((k !== 0 || l !== 0) && currentRow + k >= 0 && currentRow + k <= 8 && currentColumn + l >= 0
+			&& currentColumn + l <= 8 && Array.isArray(sudoku[currentRow + k][currentColumn + l])
+			&& (squareIndex = sudoku[currentRow + k][currentColumn + l].indexOf(numberToRemove)) !== -1) {
+				sudoku[currentRow + k][currentColumn + l].splice(squareIndex, 1);
+			}
+		}
+	}
+}
+
 const filterRowsComplex = () => {
 	for (let i = 0; i < 9; i++) {
 		for (let j = 0; j < 9; j++) {
@@ -97,6 +138,7 @@ const filterRowsComplex = () => {
 				
 				if (uniqueValues.length === 1) {
 					sudoku[i][j] = uniqueValues[0];
+					removeNumberFromColumnsRowsAndSquare(sudoku[i][j], i, j);
 				}
 			}
 		}
@@ -120,6 +162,7 @@ const filterColumnsComplex = () => {
 				
 				if (uniqueValues.length === 1) {
 					sudoku[i][j] = uniqueValues[0];
+					removeNumberFromColumnsRowsAndSquare(sudoku[i][j], i, j);
 				}
 			}
 		}
@@ -148,6 +191,7 @@ const filterSquaresComplex = () => {
 				
 				if (uniqueValues.length === 1) {
 					sudoku[i][j] = uniqueValues[0];
+					removeNumberFromColumnsRowsAndSquare(sudoku[i][j], i, j);
 				}
 			}
 		}
@@ -162,7 +206,7 @@ const sudokuSolver = () => {
 		filterSquaresSimple();
 		filterRowsComplex();
 		filterColumnsComplex();
-		filterSquaresComplex();
+		// filterSquaresComplex();
 	}
 }
 

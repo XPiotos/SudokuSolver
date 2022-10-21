@@ -1,2 +1,2 @@
 # SudokuSolver
-A simple JavaScript application which automatically solves sudoku riddles.
+A simple JavaScript script which automatically solves sudoku riddles.
